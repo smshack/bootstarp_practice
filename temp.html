@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    import config from 'config';
+
+const paths = window.location.pathname.split('/');
+/** 파일명, 차시, 회차, 강좌명, 과목명 */
+const [contentFileName, unit, revision, code, courseName] = [...paths].reverse();
+const {courses, host, protocol} = config;
+
+const course = courses[code];
+const {title: courseTitle = '', uol} = course;
+const courseware = _.get(uol, `${+revision - 1}`, [])
+const {title: coursewareTitle = '', lo} = courseware;
+var dr_type = '';
+$(document).ready(function () {
+
+    console.log(`
+     *  media - 영상
+     *  coding - 영상 + 코딩
+     *  file - 영상 + 교안
+     *  quiz - 퀴즈 / 핵심요약
+     *  html - html(링크, 생 html)
+    `);
+
+	
+    //러닝맵 Oepn
+    $('.trigger-book').on('click', () => {
+        $('.btn-book').trigger('click')
+    })
+
+    //교안다운로드
+    $('.trigger-download').on('click', () => {
+        $('.btn-download').trigger('click')
+    })
+
+    $('.cw-title').text(coursewareTitle)    //회차명 설정
+    $('.cw-revison').text(`${+revision}회차`) //회차 설정
+
+    //메뉴 설정
+    const loMenuHtml = `<ul>${lo.map(({title: loTitle = '', drg = []}, lo_idx) => {
+        if (drg.length <= 0) return null;
+        const drgMenuHtml = drg.map(({title: drgTitle, dr = []}, drg_idx) => {
+            const lo_num = _.padStart(lo_idx + 1, 2, '0');
+            const drg_num = _.padStart(drg_idx + 1, 2, '0');
+            const url = `/${courseName}/${code}/${revision}/${lo_num}/${code}_${drg_num}.html`;
+            let isActive = false;
+            if (window.location.pathname === url) {
+                $('.drg-title').text(drgTitle)    //소주제명 설정
+
+                console.log(`타입: ${dr[0].type}`)
+
+                isActive = true;
+                // next url 설정
+                if (drg_idx + 1 < drg.length) {
+                    $('.arrow_r').attr('href', `/${courseName}/${code}/${revision}/${lo_num}/${code}_${_.padStart(drg_idx + 2, 2, '0')}.html`);
+                } else if (lo_idx + 1 < lo.length) {
+                    $('.arrow_r').attr('href', `/${courseName}/${code}/${revision}/${_.padStart(lo_idx + 2, 2, '0')}/${code}_01.html`);
+                } else {
+                    $('.arrow_r,.m_arrow_r').hide()
+                }
+
+				dr_type = dr[0].type;
+				
+				
+                // prev url 설정
+                if (drg_idx === 0) {
+                    if (lo_idx === 0) {
+                        if (url === `/${courseName}/${code}/${revision}/${lo_num}/${code}_01.html`) {
+                            $('.arrow_l,.m_arrow_l').hide()
+                        } else {
+                            $('.arrow_l').attr('href', `/${courseName}/${code}/${revision}/${lo_num}/${code}_01.html`);
+                        }
+                    } else {
+                        $('.arrow_l').attr('href', `/${courseName}/${code}/${revision}/${_.padStart(lo_idx, 2, '0')}/${code}_01.html`);
+                    }
+                } else {
+                    $('.arrow_l').attr('href', `/${courseName}/${code}/${revision}/${lo_num}/${code}_${_.padStart(drg_idx, 2, '0')}.html`);
+                }
+            }
+
+            return `<div ${isActive ? 'class="active"' : ''}><a href="${url}">${drgTitle}</a></div>`;
+        }).join('')
+        return `<li>
+        <div class="lo-title">${loTitle}</div>
+        ${drgMenuHtml}
+        </li>`
+    }).join('')}</ul>`
+    $('.lec_list').html(loMenuHtml);
+
+
+    $(window).resize(function () {
+        if ($('.tab_close').closest("div").is('.hide') === true) {
+            if ($(window).width() > 768) {
+                $('.tab_close').closest("div").removeClass('hide');
+            }
+        }
+        if ($('.l-box').is('#one')) {
+            if ($(window).width() <= 768) {
+                if ($(".btn.video .toggle_button").hasClass("disable") && $(".btn.app .toggle_button").hasClass("disable")) {
+                } else if ($(".btn.video .toggle_button").hasClass("disable") && $(".btn.app .toggle_button").hasClass("enable")) {
+                    $('.r-box').css({width: '100%'});
+                } else if ($(".btn.video .toggle_button").hasClass("enable") && $(".btn.app .toggle_button").hasClass("disable")) {
+                    $('.l-box').css({width: '100%'});
+                } else {
+                    $('.l-box,.r-box').css({width: '100%'});
+                }
+            } else {
+                if ($(".btn.video .toggle_button").hasClass("disable") && $(".btn.app .toggle_button").hasClass("disable")) {
+                } else if ($(".btn.video .toggle_button").hasClass("disable") && $(".btn.app .toggle_button").hasClass("enable")) {
+                    $('.r-box').css({width: '100%'});
+                } else if ($(".btn.video .toggle_button").hasClass("enable") && $(".btn.app .toggle_button").hasClass("disable")) {
+                    $('.l-box').css({width: '100%'});
+                } else {
+                    $('.l-box,.r-box').css({width: '50%'});
+                }
+                $('.tab_close').removeClass('close')
+            }
+        }
+    })
+});
+
+
+$(window).load(function(){
+	console.log(dr_type);
+	
+	var player = $('#media-content')[0];
+	$('.toggle_button').click(function () {
+	var player = $('#media-content')[0];
+		if(dr_type == 'file' || dr_type == 'coding' || dr_type == 'media')
+		{
+			console.log('player : ' + player);
+			if($(".btn.video .toggle_button").hasClass("enable")){
+				  if (document.pictureInPictureElement) {
+					document.exitPictureInPicture();
+				  }
+			}
+			else if($(".btn.video .toggle_button").hasClass("disable")){
+				if (player.requestPictureInPicture) {
+					player.requestPictureInPicture();
+				}
+			}
+		}
+	});
+}); 
+
+</script>
+</html>

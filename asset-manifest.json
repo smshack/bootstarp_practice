@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/bootstarp_practice/static/css/main.d6f7bc10.chunk.css",
+    "main.js": "/bootstarp_practice/static/js/main.a41dba01.chunk.js",
+    "main.js.map": "/bootstarp_practice/static/js/main.a41dba01.chunk.js.map",
+    "runtime-main.js": "/bootstarp_practice/static/js/runtime-main.7f894cb2.js",
+    "runtime-main.js.map": "/bootstarp_practice/static/js/runtime-main.7f894cb2.js.map",
+    "static/css/2.600f2cac.chunk.css": "/bootstarp_practice/static/css/2.600f2cac.chunk.css",
+    "static/js/2.4a489032.chunk.js": "/bootstarp_practice/static/js/2.4a489032.chunk.js",
+    "static/js/2.4a489032.chunk.js.map": "/bootstarp_practice/static/js/2.4a489032.chunk.js.map",
+    "index.html": "/bootstarp_practice/index.html",
+    "static/css/2.600f2cac.chunk.css.map": "/bootstarp_practice/static/css/2.600f2cac.chunk.css.map",
+    "static/css/main.d6f7bc10.chunk.css.map": "/bootstarp_practice/static/css/main.d6f7bc10.chunk.css.map",
+    "static/js/2.4a489032.chunk.js.LICENSE.txt": "/bootstarp_practice/static/js/2.4a489032.chunk.js.LICENSE.txt",
+    "static/media/all.min.css": "/bootstarp_practice/static/media/fa-solid-900.46fdbd2d.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7f894cb2.js",
+    "static/css/2.600f2cac.chunk.css",
+    "static/js/2.4a489032.chunk.js",
+    "static/css/main.d6f7bc10.chunk.css",
+    "static/js/main.a41dba01.chunk.js"
+  ]
+}
